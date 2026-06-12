@@ -1,0 +1,19 @@
+{
+  "name": "Lisobet — Copa 2026",
+  "short_name": "Lisobet",
+  "description": "Bolão da Copa do Mundo FIFA 2026",
+  "display": "standalone",
+  "background_color": "#05080f",
+  "theme_color": "#0a0f1e",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["sports", "games"],
+  "lang": "pt-BR"
+}

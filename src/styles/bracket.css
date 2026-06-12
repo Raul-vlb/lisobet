@@ -1,0 +1,498 @@
+/* ============================================================
+   LISOBET — Bracket Styles
+   Copa do Mundo FIFA 2026
+   ============================================================ */
+
+/* ─── BRACKET WRAPPER ────────────────────────────────────── */
+.bracket-view {
+  min-height: calc(100dvh - var(--nav-height));
+}
+
+.bracket-scroll-container {
+  overflow-x: auto;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-bg-600) transparent;
+  padding-bottom: var(--space-8);
+}
+
+.bracket-scroll-container::-webkit-scrollbar { height: 6px; width: 6px; }
+.bracket-scroll-container::-webkit-scrollbar-track { background: transparent; }
+.bracket-scroll-container::-webkit-scrollbar-thumb {
+  background: var(--color-bg-600);
+  border-radius: var(--radius-full);
+}
+
+/* .bracket-canvas {
+  display: flex;
+  gap: 0;
+  min-width: max-content;
+  padding: var(--space-6) var(--space-4);
+} */
+
+.bracket-canvas {
+  display: flex;
+  gap: var(--space-5); /* Dá um respiro entre a esquerda, o centro e a direita */
+  min-width: max-content;
+  padding: var(--space-6) var(--space-8);
+  justify-content: center; /* Centraliza a "árvore" toda na tela */
+  align-items: stretch;
+}
+
+.bracket-side {
+  display: flex;
+  gap: 40px;
+}
+
+.bracket-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.bracket-center .bracket-matches {
+  justify-content: center;
+  margin-top: 180px;
+}
+
+/* ─── BRACKET COLUMN ─────────────────────────────────────── */
+.bracket-col {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  height: 100%;
+}
+
+.bracket-col-header {
+  text-align: center;
+  padding: var(--space-3) var(--space-6);
+  margin-bottom: var(--space-4);
+  position: sticky;
+  top: 0;
+  background: var(--color-bg-800);
+  z-index: 10;
+}
+
+.bracket-col-label {
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+}
+
+.bracket-col-count {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+  opacity: 0.7;
+}
+
+/* ─── BRACKET MATCHES LIST ───────────────────────────────── */
+.bracket-match-wrapper {
+  position: relative;
+}
+
+.bracket-match-wrapper::after {
+  content: '';
+
+  position: absolute;
+
+  top: 50%;
+  right: -20px;
+
+  width: 20px;
+  height: 2px;
+
+  background: var(--color-border);
+
+  transform: translateY(-50%);
+}
+
+.right-side .bracket-match-wrapper::after {
+  display: none;
+}
+
+.right-side .bracket-match-wrapper::before {
+  content: '';
+
+  position: absolute;
+
+  top: 50%;
+  left: -20px;
+
+  width: 20px;
+  height: 2px;
+
+  background: var(--color-border);
+
+  transform: translateY(-50%);
+}
+
+.bracket-matches {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+  justify-content: space-around;
+}
+
+/* ─── CONNECTOR LINES ────────────────────────────────────── */
+.bracket-connector {
+  display: flex;
+  align-items: center;
+  width: 32px;
+  flex-shrink: 0;
+}
+
+.bracket-connector-line {
+  width: 100%;
+  border-top: 2px solid var(--color-border);
+}
+
+/* ─── BRACKET MATCH CARD ─────────────────────────────────── */
+.bracket-match {
+  width: 190px;
+  background: var(--color-bg-card);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  flex-shrink: 0;
+}
+
+.bracket-match:hover {
+  border-color: var(--color-border-hover);
+  box-shadow: var(--shadow-match);
+  transform: translateY(-1px);
+}
+
+.bracket-match.available:hover {
+  border-color: rgba(59,130,246,0.4);
+  box-shadow: 0 0 12px rgba(59,130,246,0.15);
+}
+
+.bracket-match.has-prediction {
+  border-color: rgba(59,130,246,0.25);
+}
+
+.bracket-match.is-final {
+  width: 200px;
+  border-color: rgba(251,191,36,0.3);
+  box-shadow: 0 0 20px rgba(251,191,36,0.1);
+}
+
+.bracket-match.is-final:hover {
+  border-color: rgba(251,191,36,0.5);
+  box-shadow: 0 0 30px rgba(251,191,36,0.2);
+}
+
+.bracket-match.is-final::after {
+  content: none;
+}
+
+.bracket-match-id {
+  padding: 4px var(--space-3);
+  background: var(--color-bg-elevated);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--color-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bracket-match-stage-badge {
+  font-size: 9px;
+  padding: 1px 5px;
+  background: rgba(59,130,246,0.1);
+  color: var(--color-primary-400);
+  border-radius: var(--radius-full);
+}
+
+.is-final .bracket-match-stage-badge {
+  background: rgba(251,191,36,0.15);
+  color: var(--color-gold);
+}
+
+.bracket-match-pair {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  height: 100%;
+  gap: 10px;
+}
+
+.match-bridge {
+  position: absolute;
+  top: 50%;
+  right: -40px;
+  width: 20px;
+  height: 100%;
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+/* linha vertical */
+
+.match-bridge::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 24.7%;
+  bottom: 24.7%;
+  width: 2px;
+  background: var(--color-border);
+}
+
+/* linha horizontal */
+
+.match-bridge::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 20px;
+  height: 2px;
+  background: var(--color-border);
+}
+
+.right-side .match-bridge {
+  left: -20px;
+  right: auto;
+}
+
+.right-side .match-bridge::after {
+  left: auto;
+  right: 20px;
+}
+
+.bracket-match-wrapper:has(.is-final)::before,
+.bracket-match-wrapper:has(.is-final)::after {
+  display: none;
+}
+
+/* ─── BRACKET TEAM ROW ───────────────────────────────────── */
+.bracket-team-row {
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-3);
+  gap: var(--space-2);
+  transition: background var(--transition-fast);
+  position: relative;
+}
+
+.bracket-team-row:first-of-type {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.bracket-team-row:hover { background: rgba(255,255,255,0.03); }
+
+.bracket-team-row.winner {
+  background: rgba(16,185,129,0.06);
+}
+
+.bracket-team-flag {
+  font-size: 18px;
+  flex-shrink: 0;
+  line-height: 1;
+  width: 24px;
+  text-align: center;
+}
+
+.bracket-team-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.bracket-team-abbr {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--color-text);
+  display: block;
+}
+
+.bracket-team-abbr.placeholder {
+  color: var(--color-text-muted);
+  font-weight: 500;
+  font-size: 11px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.bracket-team-name {
+  font-size: 11px;
+  color: var(--color-text-muted);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  display: block;
+}
+
+.bracket-score {
+  font-size: 16px;
+  font-weight: 900;
+  color: var(--color-text-subtle);
+  min-width: 20px;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.bracket-score.winner-score { color: var(--color-primary-400); }
+
+.bracket-winner-icon {
+  font-size: 12px;
+  position: absolute;
+  right: var(--space-2);
+  top: 50%;
+  transform: translateY(-50%);
+  opacity: 0;
+}
+
+.bracket-team-row.winner .bracket-winner-icon { opacity: 1; }
+
+/* ─── BRACKET PAIR (matches + connector) ─────────────────── */
+.bracket-pair {
+  display: flex;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+/* ─── BRACKET CONNECTOR SVG ──────────────────────────────── */
+.bracket-lines {
+  width: 32px;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+/* ─── FINAL MATCH SPECIAL ────────────────────────────────── */
+.bracket-final-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.bracket-final-crown {
+  font-size: 28px;
+  animation: crownBob 2s ease-in-out infinite;
+}
+
+@keyframes crownBob {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+
+/* ─── THIRD PLACE MATCH ──────────────────────────────────── */
+.bracket-third-place {
+  margin-top: var(--space-4);
+  opacity: 0.8;
+}
+
+.bracket-third-place .bracket-match {
+  border-color: rgba(156,163,175,0.2);
+}
+
+/* ─── BRACKET STAGE SEPARATOR ────────────────────────────── */
+.bracket-stage-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+/* ─── CHAMPION DISPLAY IN BRACKET ────────────────────────── */
+.bracket-champion {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-6);
+  background: linear-gradient(135deg, rgba(251,191,36,0.1), rgba(217,119,6,0.05));
+  border: 1px solid rgba(251,191,36,0.25);
+  border-radius: var(--radius-lg);
+  min-width: 160px;
+  text-align: center;
+  animation: championGlow 3s ease-in-out infinite;
+}
+
+@keyframes championGlow {
+  0%, 100% { box-shadow: 0 0 10px rgba(251,191,36,0.1); }
+  50%       { box-shadow: 0 0 30px rgba(251,191,36,0.25); }
+}
+
+.bracket-champion-trophy { font-size: 40px; }
+.bracket-champion-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--color-gold);
+  font-weight: 700;
+}
+
+.bracket-champion-flag { font-size: 28px; }
+
+.bracket-champion-name {
+  font-family: var(--font-display);
+  font-size: 18px;
+  letter-spacing: 1px;
+  background: var(--gradient-gold);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  max-width: 140px;
+  text-align: center;
+}
+
+.bracket-champion-empty {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  font-style: italic;
+  max-width: 120px;
+  text-align: center;
+}
+
+/* ─── BRACKET OVERVIEW HEADER ────────────────────────────── */
+.bracket-top-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-4) var(--space-6);
+  background: var(--color-bg-card);
+  border-bottom: 1px solid var(--color-border);
+  flex-wrap: wrap;
+  gap: var(--space-3);
+}
+
+.bracket-top-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  letter-spacing: 2px;
+}
+
+.bracket-top-hint {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .bracket-match {
+    width: 180px;
+  }
+
+  .bracket-team-abbr { font-size: 11px; }
+  .bracket-team-name { display: none; }
+  .bracket-score { font-size: 14px; }
+}
