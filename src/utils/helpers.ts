@@ -1,4 +1,4 @@
-import type { MatchStage } from '../types/index.js';
+import type { MatchStage, Match } from '../types/index.js';
 
 /**
  * Formata data ISO para exibição amigável em pt-BR.
@@ -10,6 +10,26 @@ export function formatDate(dateStr: string): string {
     day: '2-digit',
     month: 'short',
   });
+}
+
+export function getExactMatchDate(match: Match): Date {
+  if (!match.time) return new Date(match.date);
+
+  // Divide "15:00 UTC-4" em ["15:00", "UTC-4"]
+  const [timePart, tzPart] = match.time.split(' ');
+  
+  // Extrai o "-4" ou "-6"
+  let offset = tzPart.replace('UTC', '');
+  
+  // Formata o fuso para o padrão ISO (ex: de "-4" para "-04:00")
+  const sign = offset.startsWith('-') ? '-' : '+';
+  let hours = offset.replace(/[+-]/, '');
+  if (hours.length === 1) hours = '0' + hours;
+  
+  // Monta a string final: "2026-06-12T15:00:00-04:00"
+  const isoString = `${match.date}T${timePart}:00${sign}${hours}:00`;
+  
+  return new Date(isoString);
 }
 
 /**

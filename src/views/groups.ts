@@ -1,7 +1,7 @@
 import type { AppState, Match, Prediction, GroupStanding } from '../types/index.js';
 import { GROUPS } from '../data/teams.js';
 import { getGroupProgress } from '../utils/standings.js';
-import { formatDate, formatScore, showToast } from '../utils/helpers.js';
+import { formatDate, formatScore, showToast, getExactMatchDate } from '../utils/helpers.js';
 import { openGroupMatchModal } from './modal.js';
 
 /**
@@ -50,7 +50,7 @@ export function renderGroupsView(container: HTMLElement, state: AppState): void 
       // Verificação de bloqueio
       const officialResult = state.matchResults?.get(matchId);
       const now = new Date();
-      const matchDate = new Date(match.date);
+      const matchDate = getExactMatchDate(match);
       
       if (now >= matchDate || officialResult !== undefined) {
         showToast('O tempo para palpites neste jogo já encerrou.', 'error');
@@ -209,7 +209,7 @@ function renderMatchCard(
   const hasOfficial = officialResult !== undefined; // Verifica se o admin lançou o resultado
 
   const now = new Date();
-  const matchDate = new Date(match.date);
+  const matchDate = getExactMatchDate(match);
 
   // O jogo bloqueia se a data passou OU se o admin já cadastrou o placar final
   const isLocked = now >= matchDate || hasOfficial;
