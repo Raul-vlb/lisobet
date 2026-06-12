@@ -31,30 +31,15 @@ create index if not exists idx_predictions_updated   on public.predictions(updat
 
 alter table public.predictions enable row level security;
 
--- SELECT: apenas seus palpites
-create policy "users_select_own"
-  on public.predictions
-  for select
-  using (auth.uid() = user_id);
+CREATE POLICY "predictions_all_ops_own" ON public.predictions
+FOR ALL -- Agrupa todas as operações (SELECT, INSERT, UPDATE, DELETE)
+TO authenticated
+USING (auth.uid() = user_id)
+WITH CHECK (auth.uid() = user_id);
 
--- INSERT: apenas para si mesmo
-create policy "users_insert_own"
-  on public.predictions
-  for insert
-  with check (auth.uid() = user_id);
-
--- UPDATE: apenas seus palpites
-create policy "users_update_own"
-  on public.predictions
-  for update
-  using (auth.uid() = user_id)
-  with check (auth.uid() = user_id);
-
--- DELETE: apenas seus palpites
-create policy "users_delete_own"
-  on public.predictions
-  for delete
-  using (auth.uid() = user_id);
+ALTER TABLE public.predictions 
+ADD CONSTRAINT check_home_score CHECK (home_score >= 0 AND home_score <= 30),
+ADD CONSTRAINT check_away_score CHECK (away_score >= 0 AND away_score <= 30);
 
 -- ────────────────────────────────────────────────────────────
 -- COMENTÁRIOS
@@ -89,30 +74,18 @@ create index if not exists idx_match_results_updated on public.match_results(upd
 
 alter table public.match_results enable row level security;
 
--- SELECT: Todos os usuários autenticados precisam ler os resultados 
--- para que o sistema possa calcular os pontos e as classificações
-create policy "results_select_all"
-  on public.match_results
-  for select
-  using (true);
+-- Leitura pública para todos
+CREATE POLICY "results_select_public" ON public.match_results
+FOR SELECT
+USING (true);
 
--- INSERT / UPDATE / DELETE: Apenas o Admin.
--- Substitua 'COLOQUE_SEU_UUID_AQUI' pelo ID real que está no seu VITE_ADMIN_IDS
-create policy "results_insert_admin"
-  on public.match_results
-  for insert
-  with check (auth.uid() = '0b113524-0f52-4a72-81f1-e7d1081cf5ab'::uuid);
+-- Escrita restrita ao Admin (Substitua pelo seu UUID real)
+CREATE POLICY "results_admin_write" ON public.match_results
+FOR ALL
+TO authenticated
+USING (auth.uid() = '0b113524-0f52-4a72-81f1-e7d1081cf5ab'::uuid)
+WITH CHECK (auth.uid() = '0b113524-0f52-4a72-81f1-e7d1081cf5ab'::uuid);
 
-create policy "results_update_admin"
-  on public.match_results
-  for update
-  using (auth.uid() = '0b113524-0f52-4a72-81f1-e7d1081cf5ab'::uuid)
-  with check (auth.uid() = '0b113524-0f52-4a72-81f1-e7d1081cf5ab'::uuid);
-
-create policy "results_delete_admin"
-  on public.match_results
-  for delete
-  using (auth.uid() = '0b113524-0f52-4a72-81f1-e7d1081cf5ab'::uuid);
 
 -- ────────────────────────────────────────────────────────────
 -- COMENTÁRIOS
@@ -198,26 +171,17 @@ execute procedure public.handle_new_user();
 
 alter table public.profiles enable row level security;
 
-create policy "profiles_select_own"
-  on public.profiles
-  for select
-  using (auth.uid() = id);
+-- Leitura pública (Permite que o ranking exiba nomes e avatares de todos)
+CREATE POLICY "profiles_select_public" ON public.profiles
+FOR SELECT
+USING (true);
 
-create policy "profiles_insert_own"
-  on public.profiles
-  for insert
-  with check (auth.uid() = id);
-
-create policy "profiles_update_own"
-  on public.profiles
-  for update
-  using (auth.uid() = id)
-  with check (auth.uid() = id);
-
-create policy "profiles_delete_own"
-  on public.profiles
-  for delete
-  using (auth.uid() = id);
+-- Escrita permitida apenas para o dono do perfil
+CREATE POLICY "profiles_write_own" ON public.profiles
+FOR ALL
+TO authenticated
+USING (auth.uid() = id)
+WITH CHECK (auth.uid() = id);
 
 
 
