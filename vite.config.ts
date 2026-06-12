@@ -7,8 +7,11 @@ export default defineConfig({
     sourcemap: false,
     rollupOptions: {
       output: {
-        manualChunks: {
-          supabase: ['@supabase/supabase-js'],
+        // Corrigido: manualChunks agora é uma função, não um objeto
+        manualChunks(id) {
+          if (id.includes('@supabase/supabase-js')) {
+            return 'supabase';
+          }
         },
       },
     },
