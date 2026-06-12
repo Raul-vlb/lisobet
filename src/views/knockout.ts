@@ -27,38 +27,40 @@ export function renderBracketView(container: HTMLElement, state: AppState): void
         </span>
       </div>
 
-      <!-- Main Bracket Scroll -->
-      <div class="bracket-scroll-container">
-        <div class="bracket-canvas" id="bracket-canvas">
-          
-          <div class="bracket-side">
-            ${leftColumns.map(col => renderBracketColumn(col.label, col.matches, col.stage, false, state)).join('')}
-          </div>
+      <div class="main-content">
+        <!-- Main Bracket Scroll -->
+        <div class="bracket-scroll-container">
+          <div class="bracket-canvas" id="bracket-canvas">
+            
+            <div class="bracket-side">
+              ${leftColumns.map(col => renderBracketColumn(col.label, col.matches, col.stage, false, state)).join('')}
+            </div>
 
-          <div class="bracket-center">
-            ${finalColumn ? renderBracketColumn(finalColumn.label, finalColumn.matches, finalColumn.stage, false, state) : ''}
-          </div>
+            <div class="bracket-center">
+              ${finalColumn ? renderBracketColumn(finalColumn.label, finalColumn.matches, finalColumn.stage, false, state) : ''}
+            </div>
 
-          <div class="bracket-side right-side">
-            ${rightColumns.map(col => renderBracketColumn(col.label, col.matches, col.stage, true, state)).join('')}
-          </div>
+            <div class="bracket-side right-side">
+              ${rightColumns.map(col => renderBracketColumn(col.label, col.matches, col.stage, true, state)).join('')}
+            </div>
 
+          </div>
         </div>
-      </div>
 
-      <!-- Third Place -->
-      ${thirdPlace ? `
-        <div style="padding:16px 24px;border-top:1px solid var(--color-border);">
-          <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:12px;">
-            🥉 Disputa do 3° Lugar
-          </div>
-          <div style="display:flex;justify-content:flex-start;">
-            <div class="bracket-third-place">
-              ${renderBracketMatch(thirdPlace)}
+        <!-- Third Place -->
+        ${thirdPlace ? `
+          <div style="padding:16px 24px;border-top:1px solid var(--color-border);">
+            <div style="font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--color-text-muted);margin-bottom:12px;">
+              🥉 Disputa do 3° Lugar
+            </div>
+            <div style="display:flex;justify-content:flex-start;">
+              <div class="bracket-third-place">
+                ${renderBracketMatch(thirdPlace)}
+              </div>
             </div>
           </div>
-        </div>
-      ` : ''}
+        ` : ''}
+      </div>
     </div>
   `;
 
