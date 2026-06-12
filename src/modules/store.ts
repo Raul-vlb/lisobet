@@ -100,8 +100,12 @@ export function getChampion(): Team | null {
 export function dispatch(action: StoreAction): void {
   state = reduce(state, action);
 
-  // Recalcular automaticamente após changes
-  if (action.type === 'UPSERT_PREDICTION' || action.type === 'SET_PREDICTIONS') {
+  // CORREÇÃO: Adicionado 'SET_MATCH_RESULTS' para forçar o recálculo da copa
+  if (
+    action.type === 'UPSERT_PREDICTION' || 
+    action.type === 'SET_PREDICTIONS' || 
+    action.type === 'SET_MATCH_RESULTS'
+  ) {
     recalculate();
   } else {
     notify();

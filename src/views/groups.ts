@@ -204,13 +204,17 @@ function renderMatchCard(
 ): string {
   const pred = predictions.get(match.id);
   const officialResult = matchResults.get(match.id);
+  
   const hasPred = pred !== undefined;
+  const hasOfficial = officialResult !== undefined; // Verifica se o admin lançou o resultado
 
   const now = new Date();
   const matchDate = new Date(match.date);
 
-  const isLocked = now >= matchDate || officialResult !== undefined;
+  // O jogo bloqueia se a data passou OU se o admin já cadastrou o placar final
+  const isLocked = now >= matchDate || hasOfficial;
 
+  // OS QUADRADOS GRANDES MOSTRAM APENAS O PALPITE (ou ? se não tiver)
   const homeScore = hasPred ? formatScore(pred!.homeScore) : '?';
   const awayScore = hasPred ? formatScore(pred!.awayScore) : '?';
   const scoreClass = hasPred ? '' : 'match-score-value--empty';
@@ -239,8 +243,8 @@ function renderMatchCard(
         </div>
         <div class="match-date">${formatDate(match.date)}</div>
         
-        ${officialResult 
-          ? `<div style="margin-top:6px; font-size:11px; font-weight:bold; color:var(--color-success); background:var(--color-bg-900); padding:2px 6px; border-radius:4px;">Placar Oficial: ${officialResult.homeScore}x${officialResult.awayScore}</div>`
+        ${hasOfficial 
+          ? `<div style="margin-top:6px; font-size:11px; font-weight:bold; color:var(--color-success); background:var(--color-bg-900); padding:2px 6px; border-radius:4px;">⚽ Placar Oficial: ${officialResult.homeScore} x ${officialResult.awayScore}</div>`
           : isLocked 
             ? `<div class="match-hint" style="color:var(--color-text-muted);">🔒 Encerrado</div>`
             : `<div class="match-hint">✏️ clique para palpitar</div>`

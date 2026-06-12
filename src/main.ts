@@ -226,41 +226,52 @@ function updateNavChampion(_state: AppState): void {
 // INIT
 // ────────────────────────────────────────────────────────────
 
+async function carregarResultadosOficiais() {
+  try {
+    // 1. Busca os dados brutos do Supabase (Array)
+    const dbResults = await fetchMatchResults();
+
+    console.log("1. Dados puros do Supabase:", dbResults);
+    
+    // 2. Converte o Array para o Map que o Store exige
+    const resultadosMap = new Map();
+    
+    dbResults.forEach((res) => {
+      resultadosMap.set(res.match_id, {
+        matchId: res.match_id,
+        homeScore: res.home_score,
+        awayScore: res.away_score,
+        updatedAt: res.updated_at
+      });
+    });
+
+    console.log("2. Map convertido:", resultadosMap);
+    // 3. Salva no Store (Isso agora vai disparar o recalculate() corrigido)
+    setMatchResults(resultadosMap);
+    
+  } catch (error) {
+    console.error("Falha ao sincronizar resultados do Supabase:", error);
+  }
+}
+
 async function init(): Promise<void> {
     try {
-        // Initialize auth and load initial state
+        // 1. Inicializa auth
         await initAuth();
-
-        // Busca os resultados oficiais
-        const dbResults = await fetchMatchResults();
-        const resultsMap = new Map();
-
-        dbResults.forEach(r => {
-            resultsMap.set(r.match_id, {
-                matchId: r.match_id,
-                homeScore: r.home_score,
-                awayScore: r.away_score
-            });
-        });
         
-        setMatchResults(resultsMap);
+        // 2. Busca e salva os resultados no store CORRETAMENTE
+        await carregarResultadosOficiais(); 
 
     } catch (err) {
         console.error('[App] Initialization error:', err);
         setInitialized(true);
 
-        // Show app even on error
         const state = getState();
         renderShell(state);
         showToast('Erro de conexão. Funcionando em modo offline.', 'error', 5000);
     } finally {
-        // Aguarda os 2.5s obrigatórios da splash terminarem
         await splashAnimationTimer;
-        
-        // Aplica o fade-out do seu CSS suavemente
         loadingScreen.classList.add('hidden');
-
-        // Remove a splash screen do HTML depois de 500ms (tempo da transição do CSS)
         setTimeout(() => {
             loadingScreen.remove();
         }, 500);

@@ -94,7 +94,6 @@ alter table public.match_results enable row level security;
 create policy "results_select_all"
   on public.match_results
   for select
-  to authenticated
   using (true);
 
 -- INSERT / UPDATE / DELETE: Apenas o Admin.
