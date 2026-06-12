@@ -231,8 +231,6 @@ async function carregarResultadosOficiais() {
     // 1. Busca os dados brutos do Supabase (Array)
     const dbResults = await fetchMatchResults();
 
-    console.log("1. Dados puros do Supabase:", dbResults);
-    
     // 2. Converte o Array para o Map que o Store exige
     const resultadosMap = new Map();
     
@@ -245,7 +243,6 @@ async function carregarResultadosOficiais() {
       });
     });
 
-    console.log("2. Map convertido:", resultadosMap);
     // 3. Salva no Store (Isso agora vai disparar o recalculate() corrigido)
     setMatchResults(resultadosMap);
     
