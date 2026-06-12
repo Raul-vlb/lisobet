@@ -1,5 +1,5 @@
 import type { AppUser } from '../types/index.js';
-import { supabase, signInWithGoogle, signInWithGithub, signInWithEmail, signUpWithEmail, signOut as sbSignOut } from '../services/supabase.js';
+import { supabase, signInWithEmail, signUpWithEmail, signOut as sbSignOut } from '../services/supabase.js';
 import { setUser, setLoading, setPredictions, setInitialized, recalculate } from './store.js';
 import { loadPredictions } from '../services/predictions.js';
 
@@ -7,7 +7,6 @@ import { loadPredictions } from '../services/predictions.js';
  * Módulo de Autenticação — Lisobet
  *
  * Gerencia:
- *   - Login OAuth (Google, GitHub)
  *   - Login por e-mail/senha
  *   - Registro
  *   - Logout
@@ -99,14 +98,6 @@ async function syncPredictions(isAuthenticated: boolean): Promise<void> {
 // ────────────────────────────────────────────────────────────
 // PUBLIC AUTH ACTIONS
 // ────────────────────────────────────────────────────────────
-
-export async function loginWithGoogle(): Promise<void> {
-    await signInWithGoogle();
-}
-
-export async function loginWithGithub(): Promise<void> {
-    await signInWithGithub();
-}
 
 export async function loginWithEmail(email: string, password: string): Promise<void> {
     await signInWithEmail(email, password);

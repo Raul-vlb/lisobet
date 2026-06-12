@@ -27,26 +27,6 @@ export const supabase = createClient(
 // AUTH HELPERS
 // ────────────────────────────────────────────────────────────
 
-export async function signInWithGoogle(): Promise<void> {
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: 'google',
-    options: {
-      redirectTo: `${window.location.origin}/lisobet/`,
-    },
-  });
-  if (error) throw error;
-}
-
-export async function signInWithGithub(): Promise<void> {
-  const { error } = await supabase.auth.signInWithOAuth({
-    provider: 'github',
-    options: {
-      redirectTo: `${window.location.origin}/lisobet/`,
-    },
-  });
-  if (error) throw error;
-}
-
 export async function signInWithEmail(
   email: string,
   password: string
